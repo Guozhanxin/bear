@@ -35,6 +35,9 @@ class Bear:
         success = True
         return success
 
+    def config(self, rtt_root, toolchain_path):
+        logging.debug('bear config self,rtt_root:{},toolchain_path:{}'.format(rtt_root, toolchain_path))
+
 # sub-command functions
 def fun_check(args):
     logging.debug('check package,pkg_path:{},pkg_index_path:{}'.format(args.pkg_path, args.pkg_index_path))
@@ -54,6 +57,11 @@ def fun_test(args):
     bear.build()
     bear.test()
 
+def fun_config(args):
+    logging.debug('config bear,rtt_root:{},toolchain_path:{}'.format(args.rtt_root, args.toolchain_path))
+    bear = Bear()
+    bear.config()
+
 def main():
     logging.basicConfig(level=LOG_LVL, format='%(asctime)s %(levelname)s: %(message)s', datefmt=None)
     parser = argparse.ArgumentParser(description='An RT-Thread software package assisted development tool.', prog=os.path.basename(sys.argv[0]))
@@ -66,17 +74,23 @@ def main():
     parser_sub.set_defaults(func=fun_check)
 
     # create the parser for the "build" command
-    parser_sub = subparsers.add_parser('build', help='build the package format and code style')
+    parser_sub = subparsers.add_parser('build', help='build the package with qemu-vexpress-a9')
     parser_sub.add_argument('--pkg_path', metavar='pkg_path', help='the package path', default=".")
     parser_sub.add_argument('--pkg_index_path', metavar='pkg_index_path', help='the package index path', default="./package")
     parser_sub.add_argument('--bsp', metavar='bsp_name', help='the bsp for build package', default="qemu-vexpress-a9")
     parser_sub.set_defaults(func=fun_build)
 
     # create the parser for the "test" command
-    parser_sub = subparsers.add_parser('test', help='test the package format and code style')
+    parser_sub = subparsers.add_parser('test', help='test the package')
     parser_sub.add_argument('--pkg_path', metavar='pkg_path', help='the package path', default=".")
     parser_sub.add_argument('--pkg_index_path', metavar='pkg_index_path', help='the package index path', default="./package")
     parser_sub.set_defaults(func=fun_test)
+
+    # create the parser for the "test" command
+    parser_sub = subparsers.add_parser('config', help='config bear')
+    parser_sub.add_argument('--rtt_root', metavar='path', help='the RTT ROOT path', default="./rt-thread")
+    parser_sub.add_argument('--toolchain_path', metavar='path', help='the toolchain path', default=".")
+    parser_sub.set_defaults(func=fun_config)
 
     args = parser.parse_args()
     args.func(args)
