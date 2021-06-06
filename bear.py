@@ -36,14 +36,22 @@ class Bear:
         return success
 
 # sub-command functions
-def fun_check(bear, args):
-    logging.debug('check package')
+def fun_check(args):
+    logging.debug('check package,pkg_path:{},pkg_index_path:{}'.format(args.pkg_path, args.pkg_index_path))
+    bear = Bear()
     bear.check()
-def fun_build(bear, args):
-    logging.debug('build package with {}'.format(args.bsp))
+
+def fun_build(args):
+    logging.debug('build package with {},pkg_path:{},pkg_index_path:{}'.format(args.bsp, args.pkg_path, args.pkg_index_path))
+    bear = Bear()
+    bear.check()
     bear.build()
-def fun_test(bear, args):
-    logging.debug('test package')
+
+def fun_test(args):
+    logging.debug('test package,pkg_path:{},pkg_index_path:{}'.format(args.pkg_path, args.pkg_index_path))
+    bear = Bear()
+    bear.check()
+    bear.build()
     bear.test()
 
 def main():
@@ -53,20 +61,25 @@ def main():
     subparsers = parser.add_subparsers(help='sub-command help')
     # create the parser for the "check" command
     parser_sub = subparsers.add_parser('check', help='Check the package format and code style')
+    parser_sub.add_argument('--pkg_path', metavar='pkg_path', help='the package path', default=".")
+    parser_sub.add_argument('--pkg_index_path', metavar='pkg_index_path', help='the package index path', default="./package")
     parser_sub.set_defaults(func=fun_check)
 
     # create the parser for the "build" command
     parser_sub = subparsers.add_parser('build', help='build the package format and code style')
+    parser_sub.add_argument('--pkg_path', metavar='pkg_path', help='the package path', default=".")
+    parser_sub.add_argument('--pkg_index_path', metavar='pkg_index_path', help='the package index path', default="./package")
     parser_sub.add_argument('--bsp', metavar='bsp_name', help='the bsp for build package', default="qemu-vexpress-a9")
     parser_sub.set_defaults(func=fun_build)
 
     # create the parser for the "test" command
     parser_sub = subparsers.add_parser('test', help='test the package format and code style')
-    parser_sub.set_defaults(func=fun_build)
+    parser_sub.add_argument('--pkg_path', metavar='pkg_path', help='the package path', default=".")
+    parser_sub.add_argument('--pkg_index_path', metavar='pkg_index_path', help='the package index path', default="./package")
+    parser_sub.set_defaults(func=fun_test)
 
-    bear = Bear()
     args = parser.parse_args()
-    args.func(bear, args)
+    args.func(args)
 
 if __name__ == '__main__':
     main()
