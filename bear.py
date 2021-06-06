@@ -60,7 +60,7 @@ def fun_test(args):
 def fun_config(args):
     logging.debug('config bear,rtt_root:{},toolchain_path:{}'.format(args.rtt_root, args.toolchain_path))
     bear = Bear()
-    bear.config()
+    bear.config(args.rtt_root, args.toolchain_path)
 
 def main():
     logging.basicConfig(level=LOG_LVL, format='%(asctime)s %(levelname)s: %(message)s', datefmt=None)
