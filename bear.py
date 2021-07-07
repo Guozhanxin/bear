@@ -1,4 +1,3 @@
-#!/user/bin/python
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2021, Flybreak
@@ -25,8 +24,14 @@ class Bear:
         check_ok = True
         return check_ok
 
-    def build(self):
+    def build(self, bsp_path, pkg_path):
         logging.debug('bear build package')
+        # os.environ['RTT_ROOT'] = r'E:\0Workspace\github\rt-thread'
+        os.environ['BEAR_PKG_ROOT'] = pkg_path
+
+        logging.debug(os.getenv('RTT_ROOT'))
+        if os.system('scons --directory=' + bsp_path + ' -j12') != 0:
+            logging.error('build failed! pkg_path:[{}]'.format(pkg_path))
         success = True
         return success
 
@@ -48,7 +53,7 @@ def fun_build(args):
     logging.debug('build package with {},pkg_path:{},pkg_index_path:{}'.format(args.bsp, args.pkg_path, args.pkg_index_path))
     bear = Bear()
     bear.check()
-    bear.build()
+    bear.build(args.bsp, args.pkg_path)
 
 def fun_test(args):
     logging.debug('test package,pkg_path:{},pkg_index_path:{}'.format(args.pkg_path, args.pkg_index_path))
@@ -65,7 +70,7 @@ def fun_config(args):
 def main():
     logging.basicConfig(level=LOG_LVL, format='%(asctime)s %(levelname)s: %(message)s', datefmt=None)
     parser = argparse.ArgumentParser(description='An RT-Thread software package assisted development tool.', prog=os.path.basename(sys.argv[0]))
-  
+
     subparsers = parser.add_subparsers(help='sub-command help')
     # create the parser for the "check" command
     parser_sub = subparsers.add_parser('check', help='Check the package format and code style')
