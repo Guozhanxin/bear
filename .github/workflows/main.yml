@@ -16,9 +16,8 @@ jobs:
         git clone https://github.com/RT-Thread/packages.git
         git clone https://github.com/Guozhanxin/bear-bsp-qemu-a9.git
         wget -q https://github.com/RT-Thread/rt-thread/archive/refs/tags/v4.0.3.tar.gz
-        tar -zxvf v4.0.3.tar.gz
-        pwd
-        echo RTT_ROOT=$curPath/rt-thread-4.0.3 >> $GITHUB_ENV
+        sudo tar -zxvf v4.0.3.tar.gz -C /home
+        echo RTT_ROOT=/home/rt-thread-4.0.3 >> $GITHUB_ENV
 
     - name: Start test
       run: |
