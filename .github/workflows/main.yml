@@ -14,17 +14,20 @@ jobs:
         sudo tar xjf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2 -C /opt
         git clone https://github.com/Guozhanxin/pkg_hello_world.git
         git clone https://github.com/RT-Thread/packages.git
-        
+        git clone https://github.com/Guozhanxin/bear-bsp-qemu-a9.git
+        wget -q https://github.com/RT-Thread/rt-thread/archive/refs/tags/v4.0.3.tar.gz
+        tar -zxvf v4.0.3.tar.gz
+        echo "RTT_ROOT=~/rt-thread-4.0.3" >> $GITHUB_ENV
 
     - name: Start test
       run: |
         python3 bear.py config --rtt_root=./todo --toolchain_path=/opt/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc
         echo “bear check start...”
-        python3 bear.py check --pkg_path=./pkg_hello_world --pkg_index_path=./packages
+        python3 bear.py check --pkg_path=./pkg_hello_world --pkg_index_path=./packages --bsp=./bear-bsp-qemu-a9
         echo “bear check OK！”
         echo “bear build start...”
-        python3 bear.py build --pkg_path=./pkg_hello_world --pkg_index_path=./packages
+        python3 bear.py build --pkg_path=./pkg_hello_world --pkg_index_path=./packages --bsp=./bear-bsp-qemu-a9
         echo “bear build OK！”
         echo “bear test start...”
-        python3 bear.py test  --pkg_path=./pkg_hello_world --pkg_index_path=./packages
+        python3 bear.py test  --pkg_path=./pkg_hello_world --pkg_index_path=./packages --bsp=./bear-bsp-qemu-a9
         echo “bear test OK！”
