@@ -16,7 +16,7 @@ jobs:
         git clone https://github.com/RT-Thread/packages.git
         git clone https://github.com/Guozhanxin/bear-bsp-qemu-a9.git
         wget -q https://github.com/RT-Thread/rt-thread/archive/refs/tags/v4.0.3.tar.gz
-        sudo tar -zxvf v4.0.3.tar.gz -C /home
+        sudo tar -zxvf v4.0.3.tar.gz -C /home >> /dev/null
         echo RTT_ROOT=/home/rt-thread-4.0.3 >> $GITHUB_ENV
         echo "RTT_EXEC_PATH=/opt/gcc-arm-none-eabi-10-2020-q4-major/bin" >> $GITHUB_ENV
 

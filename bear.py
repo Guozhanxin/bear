@@ -16,7 +16,7 @@ import time
 import json
 import requests
 
-LOG_LVL = logging.WARNING
+LOG_LVL = logging.INFO
 
 def determine_url_valid(url_from_srv):
     """Check the validity of urls."""
