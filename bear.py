@@ -29,9 +29,10 @@ class Bear:
         # os.environ['RTT_ROOT'] = r'E:\0Workspace\github\rt-thread'
         os.environ['BEAR_PKG_ROOT'] = pkg_path
 
-        logging.debug(os.getenv('RTT_ROOT'))
+        logging.debug("RTT_ROOT={}".format(os.getenv('RTT_ROOT')))
         if os.system('scons --directory=' + bsp_path + ' -j12') != 0:
             logging.error('build failed! pkg_path:[{}]'.format(pkg_path))
+            return False
         success = True
         return success
 
@@ -53,13 +54,15 @@ def fun_build(args):
     logging.debug('build package with {},pkg_path:{},pkg_index_path:{}'.format(args.bsp, args.pkg_path, args.pkg_index_path))
     bear = Bear()
     bear.check()
-    bear.build(args.bsp, args.pkg_path)
+    if bear.build(args.bsp, args.pkg_path) == False:
+        sys.exit(-1)
 
 def fun_test(args):
     logging.debug('test package with {},pkg_path:{},pkg_index_path:{}'.format(args.bsp, args.pkg_path, args.pkg_index_path))
     bear = Bear()
     bear.check()
-    bear.build(args.bsp, args.pkg_path)
+    if bear.build(args.bsp, args.pkg_path) == False:
+        sys.exit(-1)
     bear.test()
 
 def fun_config(args):
