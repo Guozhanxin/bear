@@ -56,10 +56,10 @@ def fun_build(args):
     bear.build(args.bsp, args.pkg_path)
 
 def fun_test(args):
-    logging.debug('test package,pkg_path:{},pkg_index_path:{}'.format(args.pkg_path, args.pkg_index_path))
+    logging.debug('test package with {},pkg_path:{},pkg_index_path:{}'.format(args.bsp, args.pkg_path, args.pkg_index_path))
     bear = Bear()
     bear.check()
-    bear.build()
+    bear.build(args.bsp, args.pkg_path)
     bear.test()
 
 def fun_config(args):
