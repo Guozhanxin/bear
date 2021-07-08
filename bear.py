@@ -27,9 +27,10 @@ class Bear:
     def build(self, bsp_path, pkg_path):
         logging.debug('bear build package')
         # os.environ['RTT_ROOT'] = r'E:\0Workspace\github\rt-thread'
-        os.environ['BEAR_PKG_ROOT'] = pkg_path
+        os.environ['BEAR_PKG_ROOT'] = os.path.abspath(pkg_path)
 
         logging.debug("RTT_ROOT={}".format(os.getenv('RTT_ROOT')))
+        logging.debug("BEAR_PKG_ROOT={}".format(os.getenv('BEAR_PKG_ROOT')))
         if os.system('scons --directory=' + bsp_path + ' -j12') != 0:
             logging.error('build failed! pkg_path:[{}]'.format(pkg_path))
             return False
