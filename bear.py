@@ -16,14 +16,14 @@ import time
 import json
 import requests
 
-LOG_LVL = logging.DEBUG
+LOG_LVL = logging.WARNING
 
 def determine_url_valid(url_from_srv):
     """Check the validity of urls."""
 
     # check url is github
     if not url_from_srv.startswith("https://github.com"):
-        print("not support url: {}".format(url_from_srv))
+        logging.warning("not support url: {}".format(url_from_srv))
         return False
 
     headers = {'Connection': 'keep-alive',
@@ -36,7 +36,7 @@ def determine_url_valid(url_from_srv):
             r = requests.get(url_from_srv, stream=True, headers=headers)
             if r.status_code == requests.codes.not_found:
                 if i == 2:
-                    print("Warning : %s is invalid." % url_from_srv)
+                    logging.warning("Warning : %s is invalid." % url_from_srv)
                     return False
                 time.sleep(1)
             else:
@@ -45,8 +45,8 @@ def determine_url_valid(url_from_srv):
         return True
 
     except Exception as e:
-        print('Error message:%s\t' % e)
-        print('Network connection error or the url : %s is invalid.\n' %
+        logging.error('Error message:%s\t' % e)
+        logging.error('Network connection error or the url : %s is invalid.\n' %
               url_from_srv)
 
 
@@ -57,7 +57,7 @@ def get_json_info(json_pathname):
     try:
         package_info = json.loads(json_content)
     except ValueError:
-        print('The JSON config file syntax checking failed!')
+        logging.error('The JSON config file syntax checking failed!')
         return False
 
     return package_info
@@ -69,11 +69,11 @@ def file_path_check(package_info, pathname):
     if package_info['name'] == os.path.basename(info_dir):
         return True
     else:
-        print("===========================================>")
-        print("Error: package name is different with package folder name.")
-        print(pathname)
-        print("package name:%s" % package_info['name'])
-        print("package folder name: %s" % os.path.basename(info_dir))
+        logging.debug("===========================================>")
+        logging.error("Error: package name is different with package folder name.")
+        logging.debug(pathname)
+        logging.error("package name:%s" % package_info['name'])
+        logging.debug("package folder name: %s" % os.path.basename(info_dir))
         return False
 
 
@@ -88,7 +88,7 @@ def check_json_file(work_root):
             if filename == 'package.json':
                 json_pathname = os.path.join(path, 'package.json')
                 json_info = get_json_info(json_pathname)
-                print("\nNo.%d" % file_count)
+                logging.debug("\nNo.%d" % file_count)
                 file_count += 1
                 if not json_file_content_check(json_info):
                     return False
@@ -103,27 +103,27 @@ def json_file_content_check(package_info):
     """Check the content of json file."""
 
     if package_info['category'] == '':
-        print('The category of ' + package_info['name'] + ' package is lost.')
+        logging.warning('The category of ' + package_info['name'] + ' package is lost.')
         return False
 
     if 'enable' not in package_info or package_info['enable'] == '':
-        print('The enable of ' + package_info['name'] + ' package is lost.')
+        logging.warning('The enable of ' + package_info['name'] + ' package is lost.')
         return False
 
     if package_info['author']['name'] == '':
-        print('The author name of ' + package_info['name'] + ' package is lost.')
+        logging.warning('The author name of ' + package_info['name'] + ' package is lost.')
         return False
 
     if package_info['author']['email'] == '':
-        print('The author email of ' + package_info['name'] + ' package is lost.')
+        logging.warning('The author email of ' + package_info['name'] + ' package is lost.')
         return False
 
     if package_info['license'] == '':
-        print('The license of ' + package_info['name'] + ' package is lost.')
+        logging.warning('The license of ' + package_info['name'] + ' package is lost.')
         return False
 
     if package_info['repository'] == '':
-        print('The repository of ' + package_info['name'] + ' package is lost.')
+        logging.warning('The repository of ' + package_info['name'] + ' package is lost.')
         return False
     else:
         if not determine_url_valid(package_info['repository']):
@@ -132,9 +132,9 @@ def json_file_content_check(package_info):
     for i in range(0, len(package_info['site'])):
         package_version = package_info['site'][i]['version']
         package_url = package_info['site'][i]['URL']
-        print("%s : %s" % (package_version, package_url))
+        logging.debug("%s : %s" % (package_version, package_url))
         if not package_url[-4:] == '.git':
-            print(package_info['site'][i]['filename'])
+            logging.debug(package_info['site'][i]['filename'])
         if not determine_url_valid(package_url):
             return False
 
@@ -156,7 +156,7 @@ class Bear:
 
         logging.debug("RTT_ROOT={}".format(os.getenv('RTT_ROOT')))
         logging.debug("BEAR_PKG_ROOT={}".format(os.getenv('BEAR_PKG_ROOT')))
-        if os.system('scons --directory=' + bsp_path + ' -j12') != 0:
+        if os.system('scons --directory=' + bsp_path + ' -j12 -s') != 0:
             logging.error('build failed! pkg_path:[{}]'.format(pkg_path))
             return False
         success = True
