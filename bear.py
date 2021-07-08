@@ -76,6 +76,7 @@ def main():
     parser_sub = subparsers.add_parser('check', help='Check the package format and code style')
     parser_sub.add_argument('--pkg_path', metavar='pkg_path', help='the package path', default=".")
     parser_sub.add_argument('--pkg_index_path', metavar='pkg_index_path', help='the package index path', default="./package")
+    parser_sub.add_argument('--bsp', metavar='bsp_name', help='the bsp for build package', default="qemu-vexpress-a9")
     parser_sub.set_defaults(func=fun_check)
 
     # create the parser for the "build" command
@@ -89,6 +90,7 @@ def main():
     parser_sub = subparsers.add_parser('test', help='test the package')
     parser_sub.add_argument('--pkg_path', metavar='pkg_path', help='the package path', default=".")
     parser_sub.add_argument('--pkg_index_path', metavar='pkg_index_path', help='the package index path', default="./package")
+    parser_sub.add_argument('--bsp', metavar='bsp_name', help='the bsp for build package', default="qemu-vexpress-a9")
     parser_sub.set_defaults(func=fun_test)
 
     # create the parser for the "test" command
