@@ -179,14 +179,14 @@ def fun_check(args):
 def fun_build(args):
     logging.debug('build package with {},pkg_path:{},pkg_index_path:{}'.format(args.bsp, args.pkg_path, args.pkg_index_path))
     bear = Bear()
-    bear.check()
+    # bear.check()
     if bear.build(args.bsp, args.pkg_path) == False:
         sys.exit(-1)
 
 def fun_test(args):
     logging.debug('test package with {},pkg_path:{},pkg_index_path:{}'.format(args.bsp, args.pkg_path, args.pkg_index_path))
     bear = Bear()
-    bear.check()
+    # bear.check()
     if bear.build(args.bsp, args.pkg_path) == False:
         sys.exit(-1)
     bear.test()
